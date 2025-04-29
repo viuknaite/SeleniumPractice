@@ -1,1 +1,1 @@
-Sample work with Selenium for IT Hub students
+Sample work with Selenium for students
