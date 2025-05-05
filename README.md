@@ -1,1 +1,1 @@
-Sample work with Selenium for students
+Sample Selenium+Python test for students
