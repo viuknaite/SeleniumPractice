@@ -49,6 +49,7 @@ class EnglishVersion:
     def open_first_result_in_new_tab(self):
         for _ in range(3):
             try:
+                # ссылка именно из тела статьи, а не боковых элементов
                 first_link = WebDriverWait(self.browser, 10).until(
                     EC.presence_of_element_located((By.XPATH, "(//div[contains(@class, 'mw-body-content')]//a)[1]"))
                 )
