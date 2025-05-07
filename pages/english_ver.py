@@ -1,6 +1,8 @@
+import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
 
 class EnglishVersion:
     def __init__(self, browser):
@@ -17,15 +19,19 @@ class EnglishVersion:
         self.browser.implicitly_wait(50)
 
     def click_search_button(self):
-        button = WebDriverWait(self.browser, 1000).until(
-            EC.presence_of_element_located((By.XPATH, "//div//form[@id='searchform']//button"))
-        )
-        button.click()
-
-        # End of english page
+        wait = WebDriverWait(self.browser, 10)
+        for _ in range(3):
+            try:
+                button = wait.until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "button.cdx-search-input__end-button"))
+                )
+                WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.cdx-search-input__end-button"))).click()
+                return
+            except StaleElementReferenceException:
+                time.sleep(1)
+        raise Exception("Не удалось кликнуть по кнопке поиска из-за stale element")
 
     def open_first_result_in_new_tab(self):
-        # Явное ожидание загрузки результатов
         first_link = WebDriverWait(self.browser, 1000).until(
             EC.presence_of_element_located((By.XPATH, "(//div[contains(@class, 'mw-body-content')]//a)[1]"))
         )
@@ -45,10 +51,7 @@ class EnglishVersion:
         print(cookies)
 
     def page_contains_text(self, text):
-        # Проверка заголовка страницы
         if text.lower() in self.browser.title.lower():
             return True
-
-        # Проверка содержимого страницы
         body_text = self.browser.find_element(By.TAG_NAME, "body").text
         return text.lower() in body_text.lower()
