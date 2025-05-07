@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
+from utils.screenshots import save_screenshot
 
 class EnglishVersion:
     def __init__(self, browser):
@@ -10,6 +11,7 @@ class EnglishVersion:
 
     def click_search_icon(self):
         self.browser.find_element(By.XPATH, "//div[@id='p-search']//a").click()
+        save_screenshot(self.browser, "click_search_icon")
 
     def enter_search_text(self, text):
         search_input = WebDriverWait(self.browser, 10).until(
@@ -17,6 +19,7 @@ class EnglishVersion:
         )
         search_input.send_keys(text)
         self.browser.implicitly_wait(3)
+        save_screenshot(self.browser, "enter_search_text")
 
     def click_search_button(self):
         wait = WebDriverWait(self.browser, 10)
@@ -28,6 +31,7 @@ class EnglishVersion:
                 WebDriverWait(self.browser, 10).until(
                     EC.element_to_be_clickable((By.CSS_SELECTOR, "button.cdx-search-input__end-button"))
                 ).click()
+                save_screenshot(self.browser, "click_search_button")
                 return
             except StaleElementReferenceException:
                 time.sleep(1)
@@ -49,13 +53,13 @@ class EnglishVersion:
     def open_first_result_in_new_tab(self):
         for _ in range(3):
             try:
-                # ссылка именно из тела статьи, а не боковых элементов
                 first_link = WebDriverWait(self.browser, 10).until(
                     EC.presence_of_element_located((By.XPATH, "(//div[contains(@class, 'mw-body-content')]//a)[1]"))
                 )
                 href = first_link.get_attribute("href")
                 self.browser.execute_script(f"window.open('{href}', '_blank');")
                 self.browser.switch_to.window(self.browser.window_handles[1])
+                save_screenshot(self.browser, "open_first_result_tab")
                 self.handle_cookies()
                 return
             except StaleElementReferenceException:

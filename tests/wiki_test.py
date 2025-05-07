@@ -4,7 +4,7 @@ from selenium import webdriver
 from pages.main_page import MainPage
 from pages.english_ver import EnglishVersion
 from pages.article_page import ArticlePage
-
+from utils.screenshots import save_screenshot
 
 @pytest.fixture(scope="class")
 def browser(request):
@@ -12,7 +12,6 @@ def browser(request):
     request.cls.browser = driver
     yield
     driver.quit()
-
 
 @pytest.mark.usefixtures("browser")
 class TestSearch:
@@ -23,8 +22,8 @@ class TestSearch:
         main_page = MainPage(self.browser)
         main_page.open()
         assert "Wikipedia" in self.browser.title
-        main_page.click_english_link()
 
+        main_page.click_english_link()
         self.browser.implicitly_wait(10)
 
         eng_page = EnglishVersion(self.browser)
@@ -34,4 +33,5 @@ class TestSearch:
         eng_page.open_first_result_in_new_tab()
 
         article_page = ArticlePage(self.browser)
+        save_screenshot(self.browser, "final_article_page")
         assert article_page.page_contains_text("Wikipedia")
