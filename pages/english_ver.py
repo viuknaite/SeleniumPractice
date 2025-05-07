@@ -22,6 +22,8 @@ class EnglishVersion:
         )
         button.click()
 
+        # End of english page
+
     def open_first_result_in_new_tab(self):
         # Явное ожидание загрузки результатов
         first_link = WebDriverWait(self.browser, 1000).until(
