@@ -25,7 +25,9 @@ class EnglishVersion:
                 button = wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "button.cdx-search-input__end-button"))
                 )
-                WebDriverWait(self.browser, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.cdx-search-input__end-button"))).click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "button.cdx-search-input__end-button"))
+                ).click()
                 return
             except StaleElementReferenceException:
                 time.sleep(1)
@@ -39,7 +41,6 @@ class EnglishVersion:
         self.browser.execute_script(f"window.open('{href}', '_blank');")
         self.browser.switch_to.window(self.browser.window_handles[1])
         print(self.browser.window_handles)
-        self.browser.switch_to.window(self.browser.window_handles[0])
         cookies = self.browser.get_cookies()
         print(cookies)
         self.browser.add_cookie({
