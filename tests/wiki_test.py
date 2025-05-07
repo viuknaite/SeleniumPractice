@@ -1,7 +1,8 @@
 import pytest
+from selenium import webdriver
 from pages.main_page import MainPage
 from pages.english_ver import EnglishVersion
-from selenium import webdriver
+from pages.article_page import ArticlePage  # добавлен новый импорт
 
 @pytest.fixture(scope="class")
 def browser(request):
@@ -26,4 +27,5 @@ class TestSearch:
         eng_page.click_search_button()
         eng_page.open_first_result_in_new_tab()
 
-        assert eng_page.page_contains_text("Wikipedia")
+        article = ArticlePage(self.browser)
+        assert article.page_contains_text("Wikipedia")
